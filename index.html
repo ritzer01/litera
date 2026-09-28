@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Litera</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topo">
+    <span class="rotulo">// LITERA</span>
+  </header>
+
+  <nav class="abas">
+    <button class="aba-btn ativa" data-aba="conversor">Conversor de Fontes</button>
+    <button class="aba-btn" data-aba="caracteres">Caracteres Especiais</button>
+  </nav>
+
+  <main>
+    <section id="conversor" class="painel ativo">
+      <h1 class="titulo">Transforme seu <em>texto</em>.</h1>
+
+      <div class="bloco">
+        <span class="rotulo">// TEXTO</span>
+        <textarea id="texto-entrada" class="caixa-texto" placeholder="Escreva aqui..." maxlength="300"></textarea>
+      </div>
+
+      <div class="cartoes-fontes" id="cartoes-fontes"></div>
+
+      <div class="bloco">
+        <span class="rotulo">// RESULTADO</span>
+        <textarea id="texto-resultado" class="caixa-texto" placeholder="O resultado aparece aqui..." readonly></textarea>
+      </div>
+
+      <div class="rodape-resultado">
+        <div id="opcoes-ativas" class="opcoes-ativas"></div>
+        <button id="btn-copiar" class="botao-pill">Copiar resultado</button>
+      </div>
+    </section>
+
+    <section id="caracteres" class="painel">
+  <div id="sentinela-flutuante"></div>
+  <div id="barra-selecao" class="barra-selecao">
+    <input type="text" id="caixa-selecionados" class="caixa-selecionados"
+           placeholder="Clique nos caracteres para adicionar aqui...">
+    <button id="btn-copiar-caracteres" class="botao-pill oculto">Copiar</button>
+  </div>
+  <div id="categorias-caracteres"></div>
+</section>
+  </main>
+
+  <div id="toast" class="toast">Copiado!</div>
+
+  <footer><p>&copy; 2026 Litera</p></footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

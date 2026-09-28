@@ -1,0 +1,304 @@
+:root {
+  --bg: #F2EEE3;
+  --bg-cartao: #EAE4D5;
+  --texto: #1B1B18;
+  --texto-suave: #7A7266;
+  --borda: #D9D0BC;
+  --acento: #C1622E;
+  --branco: #FFFFFF;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--texto);
+  font-family: Georgia, 'Times New Roman', serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--borda);
+}
+
+.rotulo {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.abas {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 20px 0;
+  flex-wrap: wrap;
+}
+
+.aba-btn {
+  background: transparent;
+  border: 1px solid var(--borda);
+  color: var(--texto);
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.aba-btn.ativa{
+  background: var(--texto);
+  color: var(--bg);
+  border-color: var(--texto);
+}
+
+.aba-btn:hover { 
+  background: var(--acento); 
+  color: var(--bg);
+  border-color: var(--acento);
+}
+
+.aba-btn.ativa:hover {
+  background: var(--texto);
+  color: var(--bg);
+  border-color: var(--texto);
+}
+
+main {
+  flex: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 32px 24px 60px;
+}
+
+.painel { display: none; }
+.painel.ativo { display: block; }
+
+.titulo {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 400;
+  margin-bottom: 32px;
+}
+.titulo em { font-style: italic; }
+
+.bloco { margin-bottom: 20px; }
+.bloco .rotulo { display: block; margin-bottom: 8px; }
+
+.caixa-texto {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  padding: 18px;
+  font-size: 1.05rem;
+  font-family: Georgia, serif;
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 16px;
+  color: var(--texto);
+}
+.caixa-texto:focus { outline: none; border-color: var(--texto); }
+
+.cartoes-fontes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.cartao-fonte {
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+  background: var(--bg-cartao);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.cartao-fonte.selecionado { border-color: var(--texto); background: var(--branco); }
+.cartao-fonte .amostra { font-size: 1.05rem; }
+.cartao-fonte input[type="checkbox"] { accent-color: var(--texto); width: 16px; height: 16px; }
+
+.rodape-resultado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.opcoes-ativas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  flex: 1;
+}
+
+.grupo-opcao {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.grupo-opcao select,
+.grupo-opcao button.opcao-variante {
+  border: 1px solid var(--borda);
+  background: var(--branco);
+  border-radius: 999px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+.grupo-opcao button.opcao-variante.ativa {
+  background: var(--texto);
+  color: var(--bg);
+  border-color: var(--texto);
+}
+
+.botao-pill {
+  background: var(--texto);
+  color: var(--bg);
+  border: none;
+  padding: 12px 26px;
+  border-radius: 999px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.botao-pill:hover { background: var(--acento); }
+
+#categorias-caracteres .categoria h3 {
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--texto-suave);
+  margin: 24px 0 10px;
+}
+.grade-simbolos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  gap: 8px;
+}
+.simbolo-btn {
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  font-size: 1.3rem;
+  padding: 10px;
+  cursor: pointer;
+}
+.simbolo-btn:hover { border-color: var(--texto); }
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--texto);
+  color: var(--bg);
+  padding: 10px 20px;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+}
+.toast.mostrar { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  color: var(--texto-suave);
+}
+
+/* Checkbox único (Gótica / Serifa / Cursiva) */
+.opcao-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+.opcao-checkbox input[type="checkbox"] {
+  accent-color: var(--texto);
+  width: 16px;
+  height: 16px;
+}
+
+/* Mini-cartões (Negrito) — reaproveita .cartao-fonte, só reduz o tamanho */
+.cartoes-fontes.mini {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+.cartoes-fontes.mini .cartao-fonte {
+  padding: 6px 10px;
+  flex-direction: row;
+  gap: 6px;
+}
+.cartoes-fontes.mini .amostra {
+  font-size: 1.3rem;
+}
+@media (max-width: 640px) {
+  .cartoes-fontes.mini { grid-template-columns: repeat(3, 1fr); }
+}
+
+.barra-selecao {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: var(--bg);
+  padding: 12px 4px;
+  margin-bottom: 12px;
+  transition: box-shadow 0.25s ease, padding 0.25s ease, border-radius 0.25s ease;
+}
+
+.barra-selecao.grudado {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 12px 20px;
+  border-radius: 0 0 18px 18px;
+}
+
+.caixa-selecionados {
+  flex: 1;
+  padding: 12px 18px;
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  background: var(--branco);
+  font-size: 1.1rem;
+  color: var(--texto);
+}
+.caixa-selecionados:focus { outline: none; }
+
+.botao-pill.oculto {
+  display: none;
+}
