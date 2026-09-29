@@ -1,0 +1,8 @@
+# Observação: robôs de busca só leem este arquivo na raiz do domínio.
+# Em ritzer01.github.io/litera ele não tem efeito; passa a valer com o domínio próprio.
+User-agent: *
+Allow: /
+Disallow: /privacidade.html
+
+# Ative quando o domínio próprio existir:
+# Sitemap: https://SEU-DOMINIO.com.br/sitemap.xml

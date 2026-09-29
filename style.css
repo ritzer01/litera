@@ -302,3 +302,188 @@ footer {
 .botao-pill.oculto {
   display: none;
 }
+/* Toast de erro (cópia falhou ou nada para copiar) */
+.toast.erro { background: var(--acento); color: var(--branco); }
+
+/* Links do rodapé */
+.link-rodape {
+  color: var(--texto-suave);
+  text-decoration: none;
+  border-bottom: 1px solid var(--borda);
+}
+.link-rodape:hover { color: var(--texto); border-bottom-color: var(--texto); }
+
+/* ─── LGPD Banner ──────────────────────────────────────────────────────────── */
+#lgpd-banner {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: min(92vw, 680px);
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+#lgpd-banner.lgpd-hide {
+  opacity: 0;
+  transform: translateX(-50%) translateY(12px);
+  pointer-events: none;
+}
+.lgpd-inner { display: flex; flex-direction: column; gap: 1.1rem; }
+.lgpd-title {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: var(--acento);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.lgpd-desc { font-size: 0.9rem; color: var(--texto); line-height: 1.6; }
+.lgpd-link { color: var(--texto); text-decoration: none; border-bottom: 1px solid var(--acento); }
+.lgpd-link:hover { color: var(--acento); }
+.lgpd-toggles { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.lgpd-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.lgpd-toggle input[type="checkbox"] { accent-color: var(--texto); width: 16px; height: 16px; }
+.lgpd-toggle-label {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.lgpd-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.lgpd-btn {
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border: 1px solid var(--texto);
+  background: transparent;
+  color: var(--texto);
+}
+.lgpd-btn-accept-all { background: var(--texto); color: var(--bg); }
+.lgpd-btn:hover { background: var(--acento); border-color: var(--acento); color: var(--branco); }
+.lgpd-btn-reject { border-color: transparent; }
+
+@media (max-width: 600px) {
+  #lgpd-banner {
+    bottom: 0; left: 0; right: 0;
+    transform: none;
+    width: 100%;
+    border-radius: 18px 18px 0 0;
+  }
+  #lgpd-banner.lgpd-hide { transform: translateY(12px); }
+  .lgpd-actions { flex-direction: column; }
+  .lgpd-btn { width: 100%; text-align: center; }
+}
+
+/* ─── Página de Privacidade ────────────────────────────────────────────────── */
+.voltar {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto);
+  text-decoration: none;
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+.voltar:hover { background: var(--acento); border-color: var(--acento); color: var(--branco); }
+
+.priv-layout { flex: 1; width: 100%; }
+.priv-toc { display: none; }
+.priv-wrap { max-width: 760px; margin: 0 auto; padding: 3rem 24px 5rem; }
+
+.priv-hero { margin-bottom: 2.5rem; border-bottom: 1px solid var(--borda); padding-bottom: 2rem; }
+.priv-hero .rotulo { display: block; margin-bottom: 1rem; }
+.priv-hero h1 { font-size: clamp(2rem, 6vw, 2.6rem); font-weight: 400; line-height: 1.15; margin-bottom: 1rem; }
+.priv-hero h1 em { color: var(--acento); }
+.priv-sub { line-height: 1.6; }
+.priv-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 1.25rem; }
+.priv-meta-item { display: flex; flex-direction: column; gap: 3px; }
+.priv-meta-label {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--texto-suave);
+}
+.priv-meta-val { font-size: 0.9rem; }
+
+.priv-body { display: flex; flex-direction: column; gap: 2.25rem; }
+.priv-section { display: flex; flex-direction: column; gap: 0.9rem; scroll-margin-top: 1rem; }
+.priv-section h2 { font-size: 1.35rem; font-weight: 400; display: flex; align-items: center; gap: 10px; }
+.priv-section h2::before {
+  content: '';
+  width: 3px;
+  height: 1.1em;
+  background: var(--acento);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.priv-section p, .priv-section li { font-size: 0.98rem; line-height: 1.75; }
+.priv-section ul { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.45rem; }
+.priv-section li::marker { color: var(--acento); }
+.priv-section a { color: var(--texto); text-decoration: none; border-bottom: 1px solid var(--acento); }
+.priv-section a:hover { color: var(--acento); }
+.priv-section code { font-family: 'Courier New', monospace; font-size: 0.9em; background: var(--bg-cartao); padding: 1px 5px; border-radius: 4px; }
+
+.priv-highlight { background: var(--branco); border: 1px solid var(--acento); border-radius: 14px; padding: 1rem 1.25rem; }
+.priv-divider { height: 1px; background: var(--borda); }
+
+.rights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.right-card { background: var(--bg-cartao); border: 1px solid var(--borda); border-radius: 14px; padding: 0.9rem 1rem; }
+.right-card-title {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--acento);
+  margin-bottom: 4px;
+}
+.right-card-desc { font-size: 0.88rem; line-height: 1.55; }
+
+.contact-card {
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 18px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.contact-card-email { font-size: 1.15rem; overflow-wrap: anywhere; }
+.contact-card-note { font-size: 0.88rem; line-height: 1.6; }
+
+@media (min-width: 1080px) {
+  .priv-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 3rem;
+    align-items: start;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 3rem 5rem;
+  }
+  .priv-wrap { max-width: unset; margin: 0; padding: 0; min-width: 0; }
+  .priv-toc { position: sticky; top: 2rem; display: flex; flex-direction: column; gap: 4px; }
+  .toc-link {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: var(--texto);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-left: 2px solid transparent;
+  }
+  .toc-link:hover { border-left-color: var(--acento); color: var(--acento); }
+}
+@media (max-width: 600px) {
+  .rights-grid { grid-template-columns: 1fr; }
+}
