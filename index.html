@@ -3,7 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ── Segurança: só permite arquivos do próprio site ──
+       Ao ativar Analytics/AdSense (lgpd.js), esta política precisa incluir os domínios do Google. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+
+  <link rel="icon" href="litera-icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="litera-iphone.png">
+
+  <!-- ── SEO básico ── -->
   <title>Litera</title>
+  <meta name="description" content="Transforme seu texto em letras estilizadas Unicode (gótico, cursiva, negrito, itálico) e copie caracteres especiais: estrelas, setas, símbolos e mais. Grátis e sem cadastro.">
+  <meta name="robots" content="index, follow">
+  <!-- Ative quando o domínio próprio existir (antes disso, apontaria o Google para um endereço inexistente):
+  <link rel="canonical" href="https://SEU-DOMINIO.com.br/">
+  -->
+
+  <!-- ── Open Graph (WhatsApp, Facebook, LinkedIn) ── -->
+  <meta property="og:type"        content="website">
+  <!-- <meta property="og:url"     content="https://SEU-DOMINIO.com.br/"> -->
+  <meta property="og:title"       content="Litera">
+  <meta property="og:description" content="Letras estilizadas Unicode e caracteres especiais para copiar e colar. Grátis e sem cadastro.">
+  <meta property="og:locale"      content="pt_BR">
+
+  <!-- ── Twitter Card ── -->
+  <meta name="twitter:card"        content="summary">
+  <meta name="twitter:title"       content="Litera">
+  <meta name="twitter:description" content="Letras estilizadas Unicode e caracteres especiais para copiar e colar. Grátis e sem cadastro.">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -50,10 +77,13 @@
 </section>
   </main>
 
-  <div id="toast" class="toast">Copiado!</div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <footer><p>&copy; 2026 Litera</p></footer>
+  <footer>
+    <p>&copy; 2026 Litera &nbsp;·&nbsp; <a href="privacidade.html" class="link-rodape">Política de Privacidade</a> &nbsp;·&nbsp; <a href="#" id="lgpd-open" class="link-rodape">Preferências de privacidade</a></p>
+  </footer>
 
   <script src="script.js"></script>
+  <script src="lgpd.js"></script>
 </body>
 </html>

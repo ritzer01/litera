@@ -98,8 +98,20 @@ function converterComEstilo(texto, config) {
 // ---------- CARTÕES PRINCIPAIS ----------
 const containerCartoes = document.getElementById('cartoes-fontes');
 
+// Monta <input> + <span> via DOM (sem innerHTML), para que nenhum texto seja interpretado como HTML
+function criarOpcao(tipo, nome, marcado, texto, classeTexto) {
+  const input = document.createElement('input');
+  input.type = tipo;
+  if (nome) input.name = nome;
+  input.checked = marcado;
+  const span = document.createElement('span');
+  if (classeTexto) span.className = classeTexto;
+  span.textContent = texto;
+  return [input, span];
+}
+
 function renderCartoes() {
-  containerCartoes.innerHTML = '';
+  containerCartoes.replaceChildren();
 
   Object.entries(GRUPOS).forEach(([chave, grupo]) => {
     const config = grupo.variantes[varianteAtiva[chave]];
@@ -107,10 +119,7 @@ function renderCartoes() {
 
     const cartao = document.createElement('label');
     cartao.className = 'cartao-fonte' + (grupoSelecionado === chave ? ' selecionado' : '');
-    cartao.innerHTML = `
-      <input type="radio" name="fonte-grupo" ${grupoSelecionado === chave ? 'checked' : ''}>
-      <span class="amostra">${amostra}</span>
-    `;
+    cartao.append(...criarOpcao('radio', 'fonte-grupo', grupoSelecionado === chave, amostra, 'amostra'));
 
     cartao.querySelector('input').addEventListener('change', () => {
       grupoSelecionado = chave;
@@ -127,7 +136,7 @@ function renderCartoes() {
 const containerOpcoes = document.getElementById('opcoes-ativas');
 
 function renderOpcoesAtivas() {
-  containerOpcoes.innerHTML = '';
+  containerOpcoes.replaceChildren();
   if (!grupoSelecionado) return;
 
   const grupo = GRUPOS[grupoSelecionado];
@@ -140,10 +149,7 @@ function renderOpcoesAtivas() {
 
     const wrap = document.createElement('label');
     wrap.className = 'opcao-checkbox';
-    wrap.innerHTML = `
-      <input type="checkbox" ${varianteAtiva[grupoSelecionado] === grupo.padrao ? 'checked' : ''}>
-      <span>${rotuloEstilizado}</span>
-    `;
+    wrap.append(...criarOpcao('checkbox', null, varianteAtiva[grupoSelecionado] === grupo.padrao, rotuloEstilizado));
 
     wrap.querySelector('input').addEventListener('change', (e) => {
       varianteAtiva[grupoSelecionado] = e.target.checked ? grupo.padrao : alternativa;
@@ -163,10 +169,7 @@ function renderOpcoesAtivas() {
       const cartao = document.createElement('label');
       cartao.className = 'cartao-fonte' + (varianteAtiva[grupoSelecionado] === varKey ? ' selecionado' : '');
       cartao.title = grupo.rotulos[varKey];
-      cartao.innerHTML = `
-        <input type="radio" name="negrito-variante" ${varianteAtiva[grupoSelecionado] === varKey ? 'checked' : ''}>
-        <span class="amostra">${amostra}</span>
-      `;
+      cartao.append(...criarOpcao('radio', 'negrito-variante', varianteAtiva[grupoSelecionado] === varKey, amostra, 'amostra'));
 
       cartao.querySelector('input').addEventListener('change', () => {
         varianteAtiva[grupoSelecionado] = varKey;
@@ -195,16 +198,51 @@ function atualizarResultado() {
 
 inputTexto.addEventListener('input', atualizarResultado);
 
-// ---------- COPIAR RESULTADO ----------
-document.getElementById('btn-copiar').addEventListener('click', () => {
-  if (!outputTexto.value) return;
-  navigator.clipboard.writeText(outputTexto.value).then(mostrarToast);
-});
+// ---------- COPIAR ----------
+// Tenta a API moderna; se ela não existir ou for negada, usa o método antigo
+// (execCommand) sobre o próprio campo. Se tudo falhar, deixa o texto selecionado
+// e avisa o usuário, em vez de fingir que copiou.
+async function copiarTexto(campo) {
+  const texto = campo.value;
+  try {
+    await navigator.clipboard.writeText(texto);
+    return true;
+  } catch (_) {
+    campo.focus();
+    campo.select();
+    try {
+      return document.execCommand('copy');
+    } catch (_) {
+      return false;
+    }
+  }
+}
 
-function mostrarToast() {
+async function copiarCampo(campo) {
+  if (!campo.value) {
+    mostrarToast(campo === outputTexto ? 'Escolha um estilo e escreva um texto' : 'Nada para copiar', true);
+    return;
+  }
+  const ok = await copiarTexto(campo);
+  if (ok) {
+    mostrarToast('Copiado!');
+  } else {
+    campo.focus();
+    campo.select();
+    mostrarToast('Não foi possível copiar. Use Ctrl+C / Copiar', true);
+  }
+}
+
+document.getElementById('btn-copiar').addEventListener('click', () => copiarCampo(outputTexto));
+
+let timerToast = null;
+function mostrarToast(mensagem, erro = false) {
   const toast = document.getElementById('toast');
+  toast.textContent = mensagem;
+  toast.classList.toggle('erro', erro);
   toast.classList.add('mostrar');
-  setTimeout(() => toast.classList.remove('mostrar'), 1500);
+  clearTimeout(timerToast);
+  timerToast = setTimeout(() => toast.classList.remove('mostrar'), erro ? 3000 : 1500);
 }
 
 // ---------- BARRA DE SELEÇÃO FLUTUANTE (aba Caracteres) ----------
@@ -234,10 +272,7 @@ caixaSelecionados.addEventListener('paste', (e) => {
   e.preventDefault(); // bloqueia colar texto de fora também
 });
 
-btnCopiarCaracteres.addEventListener('click', () => {
-  if (!caixaSelecionados.value) return;
-  navigator.clipboard.writeText(caixaSelecionados.value).then(mostrarToast);
-});
+btnCopiarCaracteres.addEventListener('click', () => copiarCampo(caixaSelecionados));
 
 // Observa o "sentinela": quando ele sai da tela, a barra está grudada no topo
 const observadorFlutuante = new IntersectionObserver(
@@ -281,7 +316,9 @@ const containerCategorias = document.getElementById('categorias-caracteres');
 CATEGORIAS_CARACTERES.forEach(categoria => {
   const bloco = document.createElement('div');
   bloco.className = 'categoria';
-  bloco.innerHTML = `<h3>${categoria.nome}</h3>`;
+  const titulo = document.createElement('h3');
+  titulo.textContent = categoria.nome;
+  bloco.appendChild(titulo);
 
   const grade = document.createElement('div');
   grade.className = 'grade-simbolos';
