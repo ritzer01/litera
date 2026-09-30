@@ -71,6 +71,21 @@ const varianteAtiva = {
 // ---------- CONVERSOR ----------
 const DIGITO_FALLBACK_BASE = 0x1D7CE; // dígitos "Bold" — usados quando o estilo não tem números próprios
 
+// Converte um único caractere; devolve null se ele não tiver versão no estilo
+function converterCaractere(char, config) {
+  if (config.excecoes && config.excecoes[char] !== undefined) return config.excecoes[char];
+  if (char >= 'A' && char <= 'Z') return String.fromCodePoint(config.upperBase + (char.charCodeAt(0) - 65));
+  if (char >= 'a' && char <= 'z') return String.fromCodePoint(config.lowerBase + (char.charCodeAt(0) - 97));
+  if (char >= '0' && char <= '9') {
+    const base = config.digitBase !== undefined ? config.digitBase : DIGITO_FALLBACK_BASE;
+    return String.fromCodePoint(base + (char.charCodeAt(0) - 48));
+  }
+  return null;
+}
+
+// Letra latina + só marcas combinantes (ex.: "ó" -> "o" + U+0301)
+const LETRA_COM_ACENTO = /^[A-Za-z]\p{M}+$/u;
+
 function converterComEstilo(texto, config) {
   let resultado = '';
   for (const char of texto) {
@@ -79,15 +94,17 @@ function converterComEstilo(texto, config) {
       resultado += config.mapa[chave] !== undefined ? config.mapa[chave] : char;
       continue;
     }
-    if (config.excecoes && config.excecoes[char] !== undefined) {
-      resultado += config.excecoes[char];
-    } else if (char >= 'A' && char <= 'Z') {
-      resultado += String.fromCodePoint(config.upperBase + (char.charCodeAt(0) - 65));
-    } else if (char >= 'a' && char <= 'z') {
-      resultado += String.fromCodePoint(config.lowerBase + (char.charCodeAt(0) - 97));
-    } else if (char >= '0' && char <= '9') {
-      const base = config.digitBase !== undefined ? config.digitBase : DIGITO_FALLBACK_BASE;
-      resultado += String.fromCodePoint(base + (char.charCodeAt(0) - 48));
+    const convertido = converterCaractere(char, config);
+    if (convertido !== null) {
+      resultado += convertido;
+      continue;
+    }
+    // Acentuadas (á, ç, õ...) não existem prontas no Unicode matemático:
+    // estiliza a letra base e mantém o acento como marca combinante.
+    // A decomposição é feita caractere a caractere para não alterar outros alfabetos.
+    const decomposto = char.normalize('NFD');
+    if (LETRA_COM_ACENTO.test(decomposto)) {
+      resultado += converterCaractere(decomposto[0], config) + decomposto.slice(1);
     } else {
       resultado += char;
     }
@@ -126,6 +143,7 @@ function renderCartoes() {
       renderCartoes();
       renderOpcoesAtivas();
       atualizarResultado();
+      rolarParaResultado();
     });
 
     containerCartoes.appendChild(cartao);
@@ -183,6 +201,33 @@ function renderOpcoesAtivas() {
     containerOpcoes.appendChild(grade);
   }
   // tipo 'unico' (Sobrescrito): não tem opções, container fica vazio
+}
+
+// ---------- ROLAGEM APÓS ESCOLHER UM ESTILO ----------
+// Rola o mínimo necessário para que o botão de copiar (e as opções do estilo)
+// apareçam com folga. Se couber, mantém também a caixa de texto de entrada visível;
+// se não couber (telas pequenas), prioriza o resultado e o botão de copiar.
+const blocoEntrada = document.getElementById('texto-entrada').closest('.bloco');
+const rodapeResultado = document.querySelector('.rodape-resultado');
+const MARGEM_ROLAGEM = 24;
+
+function rolarParaResultado() {
+  requestAnimationFrame(() => {
+    const altura = window.innerHeight;
+    const inicio = blocoEntrada.getBoundingClientRect().top + window.scrollY - MARGEM_ROLAGEM;
+    const fim = rodapeResultado.getBoundingClientRect().bottom + window.scrollY + MARGEM_ROLAGEM;
+    const minimo = fim - altura; // posição a partir da qual o botão fica visível
+    const atual = window.scrollY;
+    let alvo;
+    if (fim - inicio <= altura) {
+      alvo = Math.min(Math.max(atual, minimo), inicio);
+    } else {
+      alvo = Math.max(atual, minimo);
+    }
+    if (Math.abs(alvo - atual) < 2) return;
+    const reduzirMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: alvo, behavior: reduzirMovimento ? 'auto' : 'smooth' });
+  });
 }
 
 // ---------- ATUALIZAR O RESULTADO ----------
